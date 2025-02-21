@@ -1,0 +1,40 @@
+{
+  "name": "chess-position-analysis",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "description": "API to analyse a chess position using stockfish and lichess cloud evaluation.",
+  "main": "./build/src/index.js",
+  "author": "Luis Gouveia",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node build/src/index.js",
+    "build": "rimraf build && tsc",
+    "lint": "eslint"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
+    "eslint": "^9.20.1",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "globals": "^16.0.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.1",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.1"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": ".ts,.js",
+    "ignore": [],
+    "exec": "ts-node ./src/index.ts"
+  }
+}
