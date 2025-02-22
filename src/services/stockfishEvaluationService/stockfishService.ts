@@ -3,6 +3,7 @@ import { IEvaluationService, PositionEval } from '../evaluationService'
 import path from 'path'
 import { PathUtils } from '../../shared/utils/PathUtils'
 import { FailedToGetEvaluation } from '../evaluationServiceErrors'
+import { ConfigUtils } from '../../shared/utils/ConfigUtils'
 
 export class StockfishService implements IEvaluationService {
   private mapResponse(message: string): PositionEval {
@@ -29,7 +30,7 @@ export class StockfishService implements IEvaluationService {
 
       engine.addEventListener('message', (event: any) => {
         const message = event.data as string
-        console.log(event.data) // TODO: remove
+        if (ConfigUtils.get('logger', false).verbose) console.log(event.data)
 
         if (
           message.startsWith(`info depth ${depth}`) &&

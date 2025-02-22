@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import { Logger } from '../logger/Logger'
 import { BaseError } from '../errors/BaseError'
 import { UnexpectedError } from '../errors/UnexpectedError'
+import { ConfigUtils } from '../utils/ConfigUtils'
+import util from 'util'
 
 export abstract class BaseController<ResponseDTO> {
   readonly name: string
@@ -27,7 +29,13 @@ export abstract class BaseController<ResponseDTO> {
       const executionTime = Date.now() - start
       Logger.error(`${this.name} execution finished with errors in ${executionTime}ms`)
       response.status(500).json({ error: error.message })
-      throw error instanceof BaseError ? error : new UnexpectedError(error)
+
+      if (error instanceof BaseError) {
+        if (ConfigUtils.get('logger', false).verbose) {
+          console.log(util.inspect(error.data, { depth: 5 }))
+        }
+        throw error
+      } else throw new UnexpectedError(error)
     }
   }
 }

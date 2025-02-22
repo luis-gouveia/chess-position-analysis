@@ -2,5 +2,8 @@
   "analysis": {
     "minDepth": 1,
     "maxDepth": 24
+  },
+  "logger": {
+    "verbose": false
   }
 }
