@@ -2,7 +2,7 @@ import { z, ZodObject, ZodTypeAny } from 'zod'
 import { BaseValidatorSchema } from '../../shared/middleware/RequestParametersValidator'
 import { ConfigUtils } from '../../shared/utils/ConfigUtils'
 
-interface MoveAnalysisRequestDTO {
+export interface MoveAnalysisRequestDTO {
   fen: string
   depth: number
   move: string

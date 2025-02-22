@@ -5,21 +5,31 @@ import { UnexpectedError } from '../errors/UnexpectedError'
 import { ConfigUtils } from '../utils/ConfigUtils'
 import util from 'util'
 
-export abstract class BaseController<ResponseDTO> {
+export interface RequestDTO<Query, Body> {
+  query: Query
+  body: Body
+}
+
+type ControllerResponse<T> = { data: T } | { error: string; data?: any }
+
+export abstract class BaseController<RequestQueryDTO, RequestBodyDTO, ResponseDTO> {
   readonly name: string
 
   constructor(name: string) {
     this.name = name
   }
 
-  protected abstract executeController(request: Request): Promise<ResponseDTO>
+  protected abstract executeController(request: RequestDTO<RequestQueryDTO, RequestBodyDTO>): Promise<ResponseDTO>
 
-  public async execute(request: Request, response: Response): Promise<void> {
+  public async execute(
+    request: Request<unknown, unknown, RequestBodyDTO, RequestQueryDTO>,
+    response: Response<ControllerResponse<ResponseDTO>>,
+  ): Promise<void> {
     const start = Date.now()
     Logger.info(`Executing ${this.name}`)
 
     try {
-      const result = await this.executeController(request)
+      const result = await this.executeController({ query: request.query, body: request.body })
 
       const executionTime = Date.now() - start
       Logger.info(`${this.name} executed successfully in ${executionTime}ms`)

@@ -1,19 +1,13 @@
-import { Request } from 'express'
 import { IEvaluationService } from '../../services/evaluationService'
-import { BaseController } from '../../shared/controllers/BaseController'
+import { BaseController, RequestDTO } from '../../shared/controllers/BaseController'
+import { PositionAnalysisRequestDTO } from './PositionAnalysisRequestDTO'
+import { PositionAnalysisResponseDTO } from './PositionAnalysisResponseDTO'
 
-export interface PositionAnalysisRequestDTO {
-  fen: string
-  depth: number
-}
-
-export interface PositionAnalysisResponseDTO {
-  bestMove: string
-  evaluation: string
-  opening?: string
-}
-
-export class PositionAnalysisController extends BaseController<PositionAnalysisResponseDTO> {
+export class PositionAnalysisController extends BaseController<
+  PositionAnalysisRequestDTO,
+  never,
+  PositionAnalysisResponseDTO
+> {
   private readonly stockfishService: IEvaluationService
   private readonly lichessService: IEvaluationService
 
@@ -23,7 +17,11 @@ export class PositionAnalysisController extends BaseController<PositionAnalysisR
     this.lichessService = lichessService
   }
 
-  protected async executeController(request: Request): Promise<PositionAnalysisResponseDTO> {
+  protected async executeController(
+    request: RequestDTO<PositionAnalysisRequestDTO, never>,
+  ): Promise<PositionAnalysisResponseDTO> {
+    const { fen, depth } = request.query
+
     return {
       bestMove: '',
       evaluation: '',

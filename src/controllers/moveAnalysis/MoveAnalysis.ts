@@ -1,15 +1,9 @@
-import { Request } from 'express'
 import { IEvaluationService } from '../../services/evaluationService'
-import { BaseController } from '../../shared/controllers/BaseController'
+import { BaseController, RequestDTO } from '../../shared/controllers/BaseController'
+import { MoveAnalysisResponseDTO } from './MoveAnalysisResponseDTO'
+import { MoveAnalysisRequestDTO } from './MoveAnalysisRequestDTO'
 
-export interface MoveAnalysisResponseDTO {
-  bestMove: string
-  classification: string // BEST, FORCED, BLUNDER, BOOK, ...
-  evaluation: string //???????????
-  opening?: string
-}
-
-export class MoveAnalysisController extends BaseController<MoveAnalysisResponseDTO> {
+export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDTO, never, MoveAnalysisResponseDTO> {
   private readonly stockfishService: IEvaluationService
   private readonly lichessService: IEvaluationService
 
@@ -19,7 +13,9 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisResponseD
     this.lichessService = lichessService
   }
 
-  protected async executeController(request: Request): Promise<MoveAnalysisResponseDTO> {
+  protected async executeController(
+    request: RequestDTO<MoveAnalysisRequestDTO, never>,
+  ): Promise<MoveAnalysisResponseDTO> {
     return {
       bestMove: '',
       evaluation: '',
