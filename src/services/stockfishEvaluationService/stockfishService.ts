@@ -2,6 +2,7 @@ import Worker from 'web-worker'
 import { IEvaluationService, PositionEval } from '../evaluationService'
 import path from 'path'
 import { PathUtils } from '../../shared/utils/PathUtils'
+import { FailedToGetEvaluation } from '../evaluationServiceErrors'
 
 export class StockfishService implements IEvaluationService {
   private mapResponse(message: string): PositionEval {
@@ -22,13 +23,13 @@ export class StockfishService implements IEvaluationService {
     engine.postMessage('isready')
     engine.postMessage('setoption name MultiPV value 1')
 
-    return new Promise((res) => {
+    const engineEvaluation = new Promise<PositionEval>((res, rej) => {
       engine.postMessage(`position fen ${fen}`)
       engine.postMessage(`go depth ${depth}`)
 
       engine.addEventListener('message', (event: any) => {
         const message = event.data as string
-        console.log(event.data)
+        console.log(event.data) // TODO: remove
 
         if (
           message.startsWith(`info depth ${depth}`) &&
@@ -40,7 +41,17 @@ export class StockfishService implements IEvaluationService {
         }
       })
 
-      // TODO: add listener on error
+      engine.addEventListener('error', (event: any) => {
+        engine.terminate()
+        rej(event)
+      })
     })
+
+    try {
+      const evaluation = await engineEvaluation
+      return evaluation
+    } catch (error: any) {
+      throw new FailedToGetEvaluation(error, StockfishService.name)
+    }
   }
 }

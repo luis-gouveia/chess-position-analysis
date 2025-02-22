@@ -9,7 +9,7 @@ export interface PositionAnalysisRequestDTO {
 
 export interface PositionAnalysisResponseDTO {
   bestMove: string
-  evaluation: string //???????????
+  evaluation: string
   opening?: string
 }
 
