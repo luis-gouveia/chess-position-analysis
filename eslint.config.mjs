@@ -8,11 +8,19 @@ export default [
   {
     rules: {
       eqeqeq: 'error',
-      'no-unused-vars': 'error',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error'],
       'prefer-const': ['error', { ignoreReadBeforeAssign: true }],
+      '@typescript-eslint/no-explicit-any': 0,
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
     },
   },
   {
-    ignores: ['node_modules/*', 'build/*'],
+    ignores: ['node_modules/*', 'build/*', 'src/resources/*'],
   },
 ]

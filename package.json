@@ -8,13 +8,15 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node build/src/index.js",
-    "build": "rimraf build && tsc",
+    "build": "rimraf build && tsc && copyfiles ./src/resources/** ./src/resources/**/* ./build",
     "lint": "eslint"
   },
   "devDependencies": {
+    "@types/config": "^3.3.5",
     "@types/express": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^8.24.1",
     "@typescript-eslint/parser": "^8.24.1",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
@@ -27,7 +29,12 @@
     "typescript-eslint": "^8.24.1"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "axios": "^1.7.9",
+    "config": "^3.3.12",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "web-worker": "^1.3.0",
+    "zod": "^3.24.2"
   },
   "nodemonConfig": {
     "watch": [

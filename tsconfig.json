@@ -11,5 +11,6 @@
     "resolveJsonModule": true,
     "rootDir": "./"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/resources/**/*"]
 }
