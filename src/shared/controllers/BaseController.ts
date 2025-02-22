@@ -28,14 +28,17 @@ export abstract class BaseController<ResponseDTO> {
     } catch (error: any) {
       const executionTime = Date.now() - start
       Logger.error(`${this.name} execution finished with errors in ${executionTime}ms`)
-      response.status(500).json({ error: error.message })
 
       if (error instanceof BaseError) {
         if (ConfigUtils.get('logger', false).verbose) {
           console.log(util.inspect(error.data, { depth: 5 }))
         }
+        response.status(400).json({ error: error.message })
         throw error
-      } else throw new UnexpectedError(error)
+      } else {
+        response.status(500).json({ error: error.message })
+        throw new UnexpectedError(error)
+      }
     }
   }
 }
