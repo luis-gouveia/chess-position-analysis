@@ -13,9 +13,14 @@ export class RequestParameterValidator {
         next()
       } catch (error: any) {
         if (error instanceof ZodError) {
-          console.log(error.errors) // TODO: improve this
-          res.status(400).send({ msg: error.issues[0].message })
-        } else res.status(500).send('Internal server error')
+          const errorMessages = error.errors.map((issue: any) => ({
+            argument: issue.path.join('.'),
+            message: issue.message,
+          }))
+          res.status(400).json({ error: 'Invalid request data.', data: errorMessages })
+        } else {
+          res.status(500).json({ error: 'Internal Server Error.' })
+        }
       }
     }
   }
