@@ -11,7 +11,8 @@ export class Logger {
     console.log(`[${this.getFormattedDate()}] [INFO] ${message}`)
   }
 
-  public static error(message: string) {
+  public static error(message: string, error?: Error) {
     console.log(`[${this.getFormattedDate()}] [ERROR] ${message}`)
+    if (error) console.error(error)
   }
 }
