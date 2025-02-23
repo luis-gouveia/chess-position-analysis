@@ -1,7 +1,12 @@
+import { Chess, validateFen } from 'chess.js'
 import { IEvaluationService } from '../../services/evaluationService'
 import { BaseController, RequestDTO } from '../../shared/controllers/BaseController'
 import { PositionAnalysisRequestDTO } from './PositionAnalysisRequestDTO'
 import { PositionAnalysisResponseDTO } from './PositionAnalysisResponseDTO'
+import { ServiceError } from '../../shared/errors/ServiceErrors'
+import { GameAlreadyOver, InvalidFEN } from './PositionAnalysisErrors'
+import { EvaluationUtils } from '../../shared/utils/EvaluationUtils'
+import { MoveColor } from '../../shared/types/MoveColor'
 
 export class PositionAnalysisController extends BaseController<
   PositionAnalysisRequestDTO,
@@ -20,11 +25,29 @@ export class PositionAnalysisController extends BaseController<
   protected async executeController(
     request: RequestDTO<PositionAnalysisRequestDTO, never>,
   ): Promise<PositionAnalysisResponseDTO> {
-    const { fen, depth } = request.query
+    const { fen, depth, prespective } = request.query
 
+    if (!validateFen(fen).ok) throw new InvalidFEN()
+    const chessGame = new Chess(fen)
+    if (chessGame.isGameOver()) throw new GameAlreadyOver()
+
+    let positionEval
+    try {
+      positionEval = await this.lichessService.evaluate(fen, depth)
+    } catch (error: any) {
+      if (error instanceof ServiceError) {
+        positionEval = await this.stockfishService.evaluate(fen, depth)
+      } else throw error
+    }
+
+    const turn = chessGame.turn()
     return {
-      bestMove: '',
-      evaluation: '',
+      bestMove: chessGame.move(positionEval.bestMove).san,
+      evaluation: EvaluationUtils.changeEvaluationPrespective(
+        positionEval.evaluation,
+        prespective ?? MoveColor.w,
+        MoveColor[turn],
+      ),
     }
   }
 }
