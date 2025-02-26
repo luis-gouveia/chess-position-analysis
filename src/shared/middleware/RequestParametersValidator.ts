@@ -5,7 +5,7 @@ export interface BaseValidatorSchema<Input> {
   get(): ZodObject<Record<keyof Input, ZodTypeAny>>
 }
 
-export class RequestParameterValidator {
+class RequestParameterValidator {
   public validate(validator: AnyZodObject) {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -25,3 +25,5 @@ export class RequestParameterValidator {
     }
   }
 }
+
+export const validator = new RequestParameterValidator().validate
