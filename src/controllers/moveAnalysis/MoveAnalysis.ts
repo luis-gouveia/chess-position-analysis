@@ -9,6 +9,8 @@ import { ChessUtils } from '../../shared/utils/ChessUtils'
 import { EvaluationUtils } from '../../shared/utils/EvaluationUtils'
 import { getMoveClassification } from '../../scripts/evaluationScripts'
 import { MoveColor } from '../../shared/types/MoveColor'
+import { getOpening } from '../../scripts/openingsScripts'
+import { Classification } from '../../shared/types/Classification'
 
 export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDTO, never, MoveAnalysisResponseDTO> {
   private readonly stockfishService: IEvaluationService
@@ -65,13 +67,18 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDT
       MoveColor[playerTurn],
       MoveColor[opponentTurn],
     )
+
+    const opening = getOpening(chessGame.fen())
+    let classification: Classification
+    if (opening) classification = 'BOOK'
+    else if (ChessUtils.convertToLan(fen, move) === evalBeforeMove.bestMove) classification = 'BEST'
+    else classification = getMoveClassification(evalBeforeMove.evaluation, finalEvaluation)
+
     return {
       bestMove: ChessUtils.convertToSan(fen, evalBeforeMove.bestMove),
       evaluation: finalEvaluation,
-      classification:
-        ChessUtils.convertToLan(fen, move) === evalBeforeMove.bestMove
-          ? 'BEST'
-          : getMoveClassification(evalBeforeMove.evaluation, finalEvaluation),
+      classification,
+      opening,
     }
   }
 }

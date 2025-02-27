@@ -8,6 +8,7 @@ import { GameAlreadyOver, InvalidFEN } from './PositionAnalysisErrors'
 import { EvaluationUtils } from '../../shared/utils/EvaluationUtils'
 import { MoveColor } from '../../shared/types/MoveColor'
 import { ChessUtils } from '../../shared/utils/ChessUtils'
+import { getOpening } from '../../scripts/openingsScripts'
 
 export class PositionAnalysisController extends BaseController<
   PositionAnalysisRequestDTO,
@@ -54,6 +55,7 @@ export class PositionAnalysisController extends BaseController<
         prespective ?? MoveColor.w,
         MoveColor[turn],
       ),
+      opening: getOpening(fen),
     }
   }
 }
