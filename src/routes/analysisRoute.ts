@@ -5,10 +5,10 @@ import { moveAnalysisController, moveAnalysisRequestSchema } from '../controller
 
 const analysisRoute = express.Router()
 
-analysisRoute.post('/position', validator(positionAnalysisRequestSchema.get()), (req, res) =>
+analysisRoute.get('/position', validator(positionAnalysisRequestSchema.get()), (req, res) =>
   positionAnalysisController.execute(req as any, res),
 )
-analysisRoute.post('/move', validator(moveAnalysisRequestSchema.get()), (req, res) =>
+analysisRoute.get('/move', validator(moveAnalysisRequestSchema.get()), (req, res) =>
   moveAnalysisController.execute(req as any, res),
 )
 
