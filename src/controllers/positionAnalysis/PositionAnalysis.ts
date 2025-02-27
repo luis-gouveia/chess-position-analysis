@@ -1,5 +1,5 @@
 import { Chess, validateFen } from 'chess.js'
-import { IEvaluationService } from '../../services/evaluationService'
+import { IEvaluationService, PositionEval } from '../../services/evaluationService'
 import { BaseController, RequestDTO } from '../../shared/controllers/BaseController'
 import { PositionAnalysisRequestDTO } from './PositionAnalysisRequestDTO'
 import { PositionAnalysisResponseDTO } from './PositionAnalysisResponseDTO'
@@ -23,6 +23,18 @@ export class PositionAnalysisController extends BaseController<
     this.lichessService = lichessService
   }
 
+  private async callEvaluationServices(fen: string, depth: number): Promise<PositionEval> {
+    let evaluation
+    try {
+      evaluation = await this.lichessService.evaluate(fen, depth)
+    } catch (error: any) {
+      if (error instanceof ServiceError) {
+        evaluation = await this.stockfishService.evaluate(fen, depth)
+      } else throw error
+    }
+    return evaluation
+  }
+
   protected async executeController(
     request: RequestDTO<PositionAnalysisRequestDTO, never>,
   ): Promise<PositionAnalysisResponseDTO> {
@@ -32,14 +44,7 @@ export class PositionAnalysisController extends BaseController<
     const chessGame = new Chess(fen)
     if (chessGame.isGameOver()) throw new GameAlreadyOver()
 
-    let positionEval
-    try {
-      positionEval = await this.lichessService.evaluate(fen, depth)
-    } catch (error: any) {
-      if (error instanceof ServiceError) {
-        positionEval = await this.stockfishService.evaluate(fen, depth)
-      } else throw error
-    }
+    const positionEval = await this.callEvaluationServices(fen, depth)
 
     const turn = chessGame.turn()
     return {

@@ -1,4 +1,4 @@
-import { IEvaluationService } from '../../services/evaluationService'
+import { IEvaluationService, PositionEval } from '../../services/evaluationService'
 import { BaseController, RequestDTO } from '../../shared/controllers/BaseController'
 import { MoveAnalysisResponseDTO } from './MoveAnalysisResponseDTO'
 import { MoveAnalysisRequestDTO } from './MoveAnalysisRequestDTO'
@@ -20,6 +20,18 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDT
     this.lichessService = lichessService
   }
 
+  private async callEvaluationServices(fen: string, depth: number): Promise<PositionEval> {
+    let evaluation
+    try {
+      evaluation = await this.lichessService.evaluate(fen, depth)
+    } catch (error: any) {
+      if (error instanceof ServiceError) {
+        evaluation = await this.stockfishService.evaluate(fen, depth)
+      } else throw error
+    }
+    return evaluation
+  }
+
   protected async executeController(
     request: RequestDTO<MoveAnalysisRequestDTO, never>,
   ): Promise<MoveAnalysisResponseDTO> {
@@ -38,15 +50,7 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDT
       throw new InvalidMove()
     }
 
-    let evalBeforeMove
-    try {
-      evalBeforeMove = await this.lichessService.evaluate(fen, depth)
-    } catch (error: any) {
-      if (error instanceof ServiceError) {
-        evalBeforeMove = await this.stockfishService.evaluate(fen, depth)
-      } else throw error
-    }
-
+    const evalBeforeMove = await this.callEvaluationServices(fen, depth)
     if (chessGame.isGameOver()) {
       return {
         bestMove: ChessUtils.convertToSan(fen, evalBeforeMove.bestMove),
@@ -55,15 +59,7 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDT
       }
     }
 
-    let evalAfterMove
-    try {
-      evalAfterMove = await this.lichessService.evaluate(chessGame.fen(), depth)
-    } catch (error: any) {
-      if (error instanceof ServiceError) {
-        evalAfterMove = await this.stockfishService.evaluate(chessGame.fen(), depth)
-      } else throw error
-    }
-
+    const evalAfterMove = await this.callEvaluationServices(chessGame.fen(), depth)
     const finalEvaluation = EvaluationUtils.changeEvaluationPrespective(
       evalAfterMove.evaluation,
       MoveColor[playerTurn],
