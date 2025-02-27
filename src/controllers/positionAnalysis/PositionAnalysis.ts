@@ -7,6 +7,7 @@ import { ServiceError } from '../../shared/errors/ServiceErrors'
 import { GameAlreadyOver, InvalidFEN } from './PositionAnalysisErrors'
 import { EvaluationUtils } from '../../shared/utils/EvaluationUtils'
 import { MoveColor } from '../../shared/types/MoveColor'
+import { ChessUtils } from '../../shared/utils/ChessUtils'
 
 export class PositionAnalysisController extends BaseController<
   PositionAnalysisRequestDTO,
@@ -42,7 +43,7 @@ export class PositionAnalysisController extends BaseController<
 
     const turn = chessGame.turn()
     return {
-      bestMove: chessGame.move(positionEval.bestMove).san,
+      bestMove: ChessUtils.convertToSan(fen, positionEval.bestMove),
       evaluation: EvaluationUtils.changeEvaluationPrespective(
         positionEval.evaluation,
         prespective ?? MoveColor.w,

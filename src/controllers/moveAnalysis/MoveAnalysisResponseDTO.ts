@@ -1,6 +1,8 @@
+import { Classification } from '../../shared/types/Classification'
+
 export interface MoveAnalysisResponseDTO {
   bestMove: string
-  classification: string // TODO: enum BEST, FORCED, BLUNDER, BOOK, ...
+  classification: Classification
   evaluation: string
   opening?: string
 }
