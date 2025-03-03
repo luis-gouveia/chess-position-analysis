@@ -1,9 +1,16 @@
 {
+  "server": {
+    "baseRoute": "/api/v1"
+  },
+  "logger": {
+    "enabled": true,
+    "verbose": false
+  },
   "analysis": {
     "minDepth": 1,
     "maxDepth": 24
   },
-  "logger": {
-    "verbose": false
+  "services": {
+    "evaluation": "stockfish"
   }
 }

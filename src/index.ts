@@ -1,14 +1,10 @@
-import express from 'express'
 import { ConfigUtils } from './shared/utils/ConfigUtils'
-import { routes } from './routes'
+import startServer from './server'
 
-const host = ConfigUtils.get('server.host')
-const port = ConfigUtils.get('server.port')
+const { host, port, baseRoute } = ConfigUtils.get('server')
 
-const app = express()
-app.use(express.json())
-app.use('/api/v1', routes)
+const server = startServer(baseRoute)
 
-app.listen(port, host, () => {
+server.listen(port, host, () => {
   console.log(`[ ready ] Server listening at http://${host}:${port}`)
 })

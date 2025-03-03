@@ -4,7 +4,7 @@ module.exports = {
   transform: {
     '^.+\.tsx?$': ['ts-jest', {}],
   },
-  testRegex: './src/.*\\.(test|spec)?\\.(ts|ts)$',
+  testRegex: './(src|e2e)/.*\\.(test|spec)?\\.(ts|ts)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   testTimeout: 20000,
   setupFiles: ['dotenv/config'],

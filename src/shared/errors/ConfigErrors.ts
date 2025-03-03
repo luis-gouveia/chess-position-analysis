@@ -7,3 +7,9 @@ export class ConfigNotSetError extends BaseError {
     super(`No value set for config "${config}".`)
   }
 }
+
+export class InvalidConfigValue extends BaseError {
+  public constructor(field: string) {
+    super(`Invalid value for ${field}.`)
+  }
+}

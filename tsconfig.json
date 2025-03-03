@@ -11,6 +11,6 @@
     "resolveJsonModule": true,
     "rootDir": "./"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "e2e/**/*"],
   "exclude": ["src/resources/**/*"]
 }

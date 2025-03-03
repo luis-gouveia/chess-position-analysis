@@ -1,1 +1,11 @@
-{}
+{
+  "server": {
+    "baseRoute": ""
+  },
+  "logger": {
+    "enabled": false
+  },
+  "services": {
+    "evaluation": "fake"
+  }
+}

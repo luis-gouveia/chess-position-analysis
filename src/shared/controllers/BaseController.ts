@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { Logger } from '../logger/Logger'
 import { BaseError } from '../errors/BaseError'
+import { logger } from '../logger'
 
 export interface RequestDTO<Query, Body> {
   query: Query
@@ -23,18 +23,18 @@ export abstract class BaseController<RequestQueryDTO, RequestBodyDTO, ResponseDT
     response: Response<ControllerResponse<ResponseDTO>>,
   ): Promise<void> {
     const start = Date.now()
-    Logger.info(`Executing ${this.name}`)
+    logger.info(`Executing ${this.name}`)
 
     try {
       const result = await this.executeController({ query: request.query, body: request.body })
 
       const executionTime = Date.now() - start
-      Logger.info(`${this.name} executed successfully in ${executionTime}ms`)
+      logger.info(`${this.name} executed successfully in ${executionTime}ms`)
 
       response.status(200).json({ data: result })
     } catch (error: any) {
       const executionTime = Date.now() - start
-      Logger.error(`${this.name} execution finished with errors in ${executionTime}ms`, error)
+      logger.error(`${this.name} execution finished with errors in ${executionTime}ms`, error)
 
       if (error instanceof BaseError) {
         response.status(400).json({ error: error.message })

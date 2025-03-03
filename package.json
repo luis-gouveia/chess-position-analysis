@@ -10,6 +10,8 @@
     "start": "node build/src/index.js",
     "build": "rimraf build && tsc && copyfiles ./src/resources/** ./src/resources/**/* ./build",
     "lint": "eslint",
+    "test:e2e": "cross-env NODE_ENV=test jest ./e2e --verbose --silent",
+    "test:unit": "cross-env NODE_ENV=test jest ./src --verbose --silent",
     "test": "cross-env NODE_ENV=test jest --verbose --silent"
   },
   "devDependencies": {
@@ -17,6 +19,7 @@
     "@types/config": "^3.3.5",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.24.1",
     "@typescript-eslint/parser": "^8.24.1",
     "copyfiles": "^2.4.1",
@@ -29,6 +32,7 @@
     "nodemon": "^3.1.9",
     "prettier": "^3.5.1",
     "rimraf": "^6.0.1",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
