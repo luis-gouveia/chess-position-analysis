@@ -57,7 +57,7 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDT
       return {
         bestMove: ChessUtils.convertToSan(fen, evalBeforeMove.bestMove),
         evaluation: EvaluationUtils.getGameResult(chessGame),
-        classification: 'BEST',
+        classification: chessGame.isStalemate() ? 'MISTAKE' : 'BEST',
       }
     }
 
