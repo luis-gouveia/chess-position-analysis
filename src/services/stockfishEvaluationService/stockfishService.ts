@@ -4,15 +4,22 @@ import path from 'path'
 import { PathUtils } from '../../shared/utils/PathUtils'
 import { FailedToGetEvaluation } from '../evaluationServiceErrors'
 import { ConfigUtils } from '../../shared/utils/ConfigUtils'
+import { Evaluation } from '../../shared/types/Evaluation'
 
 export class StockfishService implements IEvaluationService {
   private mapResponse(message: string): PositionEval {
     const bestMove = message.slice(message.indexOf(' pv') + 4).split(' ')[0]
-    let evaluation: string
+    let evaluation: Evaluation
     if (message.includes('score mate')) {
-      evaluation = 'M' + message.slice(message.indexOf('score mate') + 11, message.indexOf('nodes') - 1)
+      evaluation = {
+        type: 'M',
+        value: Number(message.slice(message.indexOf('score mate') + 11, message.indexOf('nodes') - 1)),
+      }
     } else {
-      evaluation = message.slice(message.indexOf('cp') + 3, message.indexOf('nodes') - 1)
+      evaluation = {
+        type: 'CP',
+        value: Number(message.slice(message.indexOf('cp') + 3, message.indexOf('nodes') - 1)),
+      }
     }
     return { bestMove, evaluation }
   }

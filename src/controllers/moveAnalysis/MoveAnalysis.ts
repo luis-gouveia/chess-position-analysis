@@ -62,7 +62,7 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDT
     }
 
     const evalAfterMove = await this.callEvaluationServices(chessGame.fen(), depth)
-    const finalEvaluation = EvaluationUtils.changeEvaluationPrespective(
+    const finalEvaluation = EvaluationUtils.changePrespective(
       evalAfterMove.evaluation,
       MoveColor[playerTurn],
       MoveColor[opponentTurn],
@@ -76,7 +76,7 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDT
 
     return {
       bestMove: ChessUtils.convertToSan(fen, evalBeforeMove.bestMove),
-      evaluation: finalEvaluation,
+      evaluation: EvaluationUtils.stringify(finalEvaluation),
       classification,
       opening,
     }

@@ -48,13 +48,14 @@ export class PositionAnalysisController extends BaseController<
     const positionEval = await this.callEvaluationServices(fen, depth)
 
     const turn = chessGame.turn()
+    const evaluation = EvaluationUtils.changePrespective(
+      positionEval.evaluation,
+      prespective ?? MoveColor.w,
+      MoveColor[turn],
+    )
     return {
       bestMove: ChessUtils.convertToSan(fen, positionEval.bestMove),
-      evaluation: EvaluationUtils.changeEvaluationPrespective(
-        positionEval.evaluation,
-        prespective ?? MoveColor.w,
-        MoveColor[turn],
-      ),
+      evaluation: EvaluationUtils.stringify(evaluation),
       opening: getOpening(fen),
     }
   }

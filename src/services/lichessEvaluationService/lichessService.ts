@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { IEvaluationService, PositionEval } from '../evaluationService'
 import { FailedToGetEvaluation, InvalidEvaluationDepth, InvalidEvaluationData } from '../evaluationServiceErrors'
+import { Evaluation } from '../../shared/types/Evaluation'
 
 export class LichessService implements IEvaluationService {
   public async evaluate(fen: string, depth: number): Promise<PositionEval> {
@@ -17,7 +18,10 @@ export class LichessService implements IEvaluationService {
     const evalScore = bestLine.cp ?? bestLine.mate
     if (!bestLine || !evalScore) throw new InvalidEvaluationData(data, LichessService.name)
 
-    const evaluation = `${bestLine.cp ? '' : 'M'}${evalScore}`
+    const evaluation: Evaluation = {
+      type: bestLine.cp ? 'CP' : 'M',
+      value: Number(evalScore),
+    }
     const bestMove = bestLine.moves.split(' ')[0]
     return { bestMove, evaluation }
   }

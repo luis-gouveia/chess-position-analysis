@@ -1,6 +1,8 @@
+import { Evaluation } from '../shared/types/Evaluation'
+
 export interface PositionEval {
   bestMove: string
-  evaluation: string
+  evaluation: Evaluation
 }
 
 export interface IEvaluationService {

@@ -3,18 +3,31 @@ import { EvaluationUtils } from './EvaluationUtils'
 
 describe('EvaluationUtils', () => {
   test('Should be able to change mate evaluation prespective', () => {
-    const evaluation = EvaluationUtils.changeEvaluationPrespective('M1', MoveColor.b, MoveColor.w)
-    expect(evaluation).toEqual('M-1')
+    const evaluation = EvaluationUtils.changePrespective({ type: 'M', value: 1 }, MoveColor.b, MoveColor.w)
+    expect(evaluation.type).toEqual('M')
+    expect(evaluation.value).toEqual(-1)
   })
 
   test('Should be able to change cp evaluation prespective', () => {
-    const evaluation = EvaluationUtils.changeEvaluationPrespective('-20', MoveColor.b, MoveColor.w)
-    expect(evaluation).toEqual('20')
+    const evaluation = EvaluationUtils.changePrespective({ type: 'CP', value: -20 }, MoveColor.b, MoveColor.w)
+    expect(evaluation.type).toEqual('CP')
+    expect(evaluation.value).toEqual(20)
   })
 
-  test('Should return same evaluation if prespective is the same as turn', () => {
-    const evaluation = EvaluationUtils.changeEvaluationPrespective('M2', MoveColor.b, MoveColor.b)
-    expect(evaluation).toEqual('M2')
+  test('Should return the same evaluation if prespective is the same as turn', () => {
+    const evaluation = EvaluationUtils.changePrespective({ type: 'M', value: 2 }, MoveColor.b, MoveColor.b)
+    expect(evaluation.type).toEqual('M')
+    expect(evaluation.value).toEqual(2)
+  })
+
+  test('Should be able to stringify a mate evaluation', () => {
+    const evaluation = EvaluationUtils.stringify({ type: 'M', value: 1 })
+    expect(evaluation).toEqual('M1')
+  })
+
+  test('Should be able to stringify a cp evaluation', () => {
+    const evaluation = EvaluationUtils.stringify({ type: 'CP', value: -47 })
+    expect(evaluation).toEqual('-47')
   })
 
   test("Should return correct game result for a game didn't end", () => {

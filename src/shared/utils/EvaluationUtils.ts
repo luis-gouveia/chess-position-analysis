@@ -1,16 +1,18 @@
 import { Chess } from 'chess.js'
 import { MoveColor } from '../types/MoveColor'
+import { Evaluation } from '../types/Evaluation'
 
 export abstract class EvaluationUtils {
-  public static changeEvaluationPrespective(evaluation: string, prespective: MoveColor, turn: MoveColor): string {
+  public static changePrespective(evaluation: Evaluation, prespective: MoveColor, turn: MoveColor): Evaluation {
     if (turn === prespective) return evaluation
-
-    let prefix = ''
-    if (evaluation.startsWith('M')) {
-      prefix = 'M'
-      evaluation = evaluation.split('M')[1]
+    return {
+      type: evaluation.type,
+      value: evaluation.value * -1,
     }
-    return `${prefix}${Number(evaluation) * -1}`
+  }
+
+  public static stringify(evaluation: Evaluation): string {
+    return `${evaluation.type === 'M' ? evaluation.type : ''}${evaluation.value}`
   }
 
   public static getGameResult(game: Chess | string): string {

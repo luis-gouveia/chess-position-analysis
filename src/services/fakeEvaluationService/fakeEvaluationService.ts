@@ -7,7 +7,7 @@ export class FakeEvaluationService implements IEvaluationService {
     const game = new Chess(fen)
     return {
       bestMove: ChessUtils.convertToLan(fen, game.moves()[0]),
-      evaluation: String(Math.floor(Math.random() * 21) - 10),
+      evaluation: { type: 'CP', value: Math.floor(Math.random() * 21) - 10 },
     }
   }
 }
