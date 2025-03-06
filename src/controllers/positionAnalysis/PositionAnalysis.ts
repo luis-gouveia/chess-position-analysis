@@ -4,7 +4,7 @@ import { BaseController, RequestDTO } from '../../shared/controllers/BaseControl
 import { PositionAnalysisRequestDTO } from './PositionAnalysisRequestDTO'
 import { PositionAnalysisResponseDTO } from './PositionAnalysisResponseDTO'
 import { ServiceError } from '../../shared/errors/ServiceErrors'
-import { GameAlreadyOver, InvalidFEN } from './PositionAnalysisErrors'
+import { InvalidFEN } from './PositionAnalysisErrors'
 import { EvaluationUtils } from '../../shared/utils/EvaluationUtils'
 import { MoveColor } from '../../shared/types/MoveColor'
 import { ChessUtils } from '../../shared/utils/ChessUtils'
@@ -43,7 +43,11 @@ export class PositionAnalysisController extends BaseController<
 
     if (!validateFen(fen).ok) throw new InvalidFEN()
     const chessGame = new Chess(fen)
-    if (chessGame.isGameOver()) throw new GameAlreadyOver()
+    if (chessGame.isGameOver()) {
+      return {
+        evaluation: EvaluationUtils.getGameResult(fen),
+      }
+    }
 
     const positionEval = await this.callEvaluationServices(fen, depth)
 

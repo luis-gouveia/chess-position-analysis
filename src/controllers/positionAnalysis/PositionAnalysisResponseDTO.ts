@@ -1,5 +1,5 @@
 export interface PositionAnalysisResponseDTO {
-  bestMove: string
   evaluation: string
+  bestMove?: string
   opening?: string
 }

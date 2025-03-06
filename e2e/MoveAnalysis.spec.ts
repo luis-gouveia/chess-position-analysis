@@ -43,14 +43,17 @@ describe('MoveAnalysis', () => {
     expect(response.body.error).toEqual('The provided move is not valid.')
   })
 
-  test('Should fail if the provided game already ended', async () => {
+  test('Should be able to analyse if the provided game already ended', async () => {
     const response = await request(server).get('/analysis/move').query({
       fen: '4k2R/6Q1/8/8/8/8/8/3K4 b - - 0 1',
       move: 'e4',
       depth: 20,
     })
-    expect(response.statusCode).toEqual(400)
-    expect(response.body.error).toEqual('The provided FEN corresponds to a game that already ended.')
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.data.evaluation).toEqual('1-0')
+    expect(response.body.data.bestMove).toBeUndefined()
+    expect(response.body.data.classification).toBeUndefined()
+    expect(response.body.data.opening).toBeUndefined()
   })
 
   test('Should be able to analyse a move with valid input data', async () => {
@@ -59,9 +62,11 @@ describe('MoveAnalysis', () => {
       move: 'Kc4',
       depth: 20,
     })
+    expect(response.statusCode).toEqual(200)
     expect(response.body.data.bestMove).toBeDefined()
     expect(response.body.data.evaluation).toBeDefined()
     expect(response.body.data.classification).toBeDefined()
+    expect(response.body.data.opening).toBeUndefined()
   })
 
   test('Should be able to analyse a move that is a checkmate', async () => {
@@ -70,9 +75,11 @@ describe('MoveAnalysis', () => {
       move: 'Rh8',
       depth: 20,
     })
+    expect(response.statusCode).toEqual(200)
     expect(response.body.data.bestMove).toBeDefined()
     expect(response.body.data.evaluation).toEqual('1-0')
     expect(response.body.data.classification).toEqual('BEST')
+    expect(response.body.data.opening).toBeUndefined()
   })
 
   test('Should be able to analyse a move that resulted in a stalemate', async () => {
@@ -81,9 +88,11 @@ describe('MoveAnalysis', () => {
       move: 'Rh7',
       depth: 20,
     })
+    expect(response.statusCode).toEqual(200)
     expect(response.body.data.bestMove).toBeDefined()
     expect(response.body.data.evaluation).toEqual('1/2-1/2')
     expect(response.body.data.classification).toEqual('MISTAKE')
+    expect(response.body.data.opening).toBeUndefined()
   })
 
   test('Should be able to analyse a book move', async () => {
@@ -92,6 +101,7 @@ describe('MoveAnalysis', () => {
       move: 'a3',
       depth: 20,
     })
+    expect(response.statusCode).toEqual(200)
     expect(response.body.data.bestMove).toBeDefined()
     expect(response.body.data.evaluation).toBeDefined()
     expect(response.body.data.classification).toEqual('BOOK')

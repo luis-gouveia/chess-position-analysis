@@ -3,7 +3,7 @@ import { BaseController, RequestDTO } from '../../shared/controllers/BaseControl
 import { MoveAnalysisResponseDTO } from './MoveAnalysisResponseDTO'
 import { MoveAnalysisRequestDTO } from './MoveAnalysisRequestDTO'
 import { Chess, validateFen } from 'chess.js'
-import { GameAlreadyOver, InvalidFEN, InvalidMove } from './MoveAnalysisErrors'
+import { InvalidFEN, InvalidMove } from './MoveAnalysisErrors'
 import { ServiceError } from '../../shared/errors/ServiceErrors'
 import { ChessUtils } from '../../shared/utils/ChessUtils'
 import { EvaluationUtils } from '../../shared/utils/EvaluationUtils'
@@ -41,7 +41,11 @@ export class MoveAnalysisController extends BaseController<MoveAnalysisRequestDT
 
     if (!validateFen(fen).ok) throw new InvalidFEN()
     const chessGame = new Chess(fen)
-    if (chessGame.isGameOver()) throw new GameAlreadyOver()
+    if (chessGame.isGameOver()) {
+      return {
+        evaluation: EvaluationUtils.getGameResult(fen),
+      }
+    }
 
     const playerTurn = chessGame.turn()
     let opponentTurn

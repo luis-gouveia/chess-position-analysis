@@ -7,12 +7,6 @@ export class InvalidFEN extends ControllerError {
   }
 }
 
-export class GameAlreadyOver extends ControllerError {
-  constructor() {
-    super('The provided FEN corresponds to a game that already ended.', MoveAnalysisController.name)
-  }
-}
-
 export class InvalidMove extends ControllerError {
   constructor() {
     super('The provided move is not valid.', MoveAnalysisController.name)

@@ -42,13 +42,15 @@ describe('PositionAnalysis', () => {
     expect(response.body.data[0].argument).toEqual('prespective')
   })
 
-  test('Should fail if the provided game already ended', async () => {
+  test('Should be able to analyse a game that already ended', async () => {
     const response = await request(server).get('/analysis/position').query({
       fen: '4k2R/6Q1/8/8/8/8/8/3K4 b - - 0 1',
       depth: 20,
     })
-    expect(response.statusCode).toEqual(400)
-    expect(response.body.error).toEqual('The provided FEN corresponds to a game that already ended.')
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.data.evaluation).toEqual('1-0')
+    expect(response.body.data.bestMove).toBeUndefined()
+    expect(response.body.data.opening).toBeUndefined()
   })
 
   test('Should be able to analyse a position with valid input data', async () => {
@@ -57,6 +59,7 @@ describe('PositionAnalysis', () => {
       depth: 20,
       prespective: 'white',
     })
+    expect(response.statusCode).toEqual(200)
     expect(response.body.data.bestMove).toBeDefined()
     expect(response.body.data.evaluation).toBeDefined()
     expect(response.body.data.opening).toEqual('Amar Opening: Paris Gambit')
