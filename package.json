@@ -1,7 +1,7 @@
 {
   "name": "chess-position-analysis",
   "version": "1.0.0",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0",
   "description": "API to analyse a chess position using stockfish and lichess cloud evaluation.",
   "main": "./build/src/index.js",
   "author": "Luis Gouveia",

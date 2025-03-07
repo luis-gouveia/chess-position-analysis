@@ -1,6 +1,11 @@
 import { Classification } from '../shared/types/Classification'
 import { Evaluation } from '../shared/types/Evaluation'
 
+/**
+ * This function is adapted from the Lila project (Lichess)
+ * Original Source: https://github.com/lichess-org/lila/blob/master/ui/ceval/src/winningChances.ts
+ * Licensed under AGPL-3.0
+ */
 function evalWinningChances(evaluation: Evaluation): number {
   let cp
   if (evaluation.type === 'M') {
@@ -13,6 +18,11 @@ function evalWinningChances(evaluation: Evaluation): number {
   return 2 / (1 + Math.exp(-0.00368208 * cp)) - 1
 }
 
+/**
+ * This function is adapted from the Lila project (Lichess)
+ * Original Source: https://github.com/lichess-org/lila/blob/master/ui/analyse/src/practice/practiceCtrl.ts#L94
+ * Licensed under AGPL-3.0
+ */
 export function getMoveClassification(evalBefore: Evaluation, evalAfter: Evaluation): Classification {
   const shift = ((evalWinningChances(evalAfter) - evalWinningChances(evalBefore)) / 2) * -1
   if (shift < 0.025) return 'GOOD'
