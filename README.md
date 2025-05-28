@@ -5,6 +5,7 @@ This API allows you to evaluate chess positions and specific moves using [_Stock
 1. Clone Repo
 ```
 git clone https://github.com/luis-gouveia/chess-position-analysis.git
+cd chess-position-analysis
 ```
 2. Install NPM packages
 ```
